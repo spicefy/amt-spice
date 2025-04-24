@@ -1,0 +1,207 @@
+
+/*
+Theme Name: AMT-Spice
+Theme URI: https://africamediatrust.org
+Author: Africa Media Trust
+Author URI: https://africamediatrust.org
+Description: A custom WordPress theme for Africa Media Trust with full customizer support.
+Version: 1.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: amt-spice
+*/
+:root {
+   
+    --primary-color: #009bbe;
+    --secondary-color: #fd153a;
+    --background-color: #fff;
+    --text-color: #333;
+--font-family: 'Arial', sans-serif;
+--font-size-base: 18px;
+--font-size-large: 50px;
+--font-size-medium: 22px; /* Medium font size */
+--font-size-small: 16px; /* Small font size */
+--font-size-xsmall: 14px; /* Extra small font size */
+--font-size-xxsmall: 12px; /* Extra extra small font size */
+--font-size-xxlarge: 60px; /* Extra extra large font size */
+--font-size-xxsmall: 10px; /* Extra extra small font size */
+--font-size-xxlarge: 60px; /* Extra extra large font size */
+ --text-primary: #009bbe;
+--text-secondary: #fd153a;
+--text-white: #fff;}
+body {
+font-family: var(--font-family);
+font-size: var(--font-size-base);
+color: var(--text-color);
+background-color: var(--background-color);
+}
+.btn-outline-primary {
+color: transparent;
+border-color: var(--primary-color);
+transition: all 0.3s ease-in-out;
+}
+
+.btn-outline-primary:hover {
+background-color: var(--primary-color);
+color: var(--tex-white);
+}
+
+.btn-outline-secondary {
+color: var(--secondary-color);
+border-color: var(--secondary-color);
+transition: all 0.3s ease-in-out;
+}
+
+.btn-outline-secondary:hover {
+background-color: var(--secondary-color);
+color: var(--text-white);
+}
+.btn-wide {
+min-width: 200px; /* Adjust width as needed */
+}
+/* ==================== */
+/* Navbar */
+.navbar {
+padding: 15px;
+background: var(--background-color);
+}
+.navbar-brand img {
+height: 60px;
+}
+.nav-link {
+font-size: var(--font-size-base);
+color: var(--primary);
+transition: color 0.3s ease;
+}
+.nav-link:hover {
+color: var(--secondary-color) !important;
+}
+.nav-link.show {
+color: var(--secondary-color) !important;
+}
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: var(--bs-dropdown-item-padding-y) var(--bs-dropdown-item-padding-x);
+    clear: both;
+    font-size: var(--font-size-base);
+    color: var(--primary-color);
+    text-align: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+    border-radius: var(--bs-dropdown-item-border-radius, 20);
+    }
+    
+.dropdown-item:hover {
+    color: var(--secondary-color);
+    }
+
+.dropdown-menu {
+    background-color: var(--background-color);
+   
+}
+
+.dropdown-menu:hover {
+    color: var(--secondary-color);
+    
+}      
+/* Fix dropdowns staying open on mobile */
+@media (min-width: 992px) {
+.nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+}
+}
+
+/* Hero Section */
+.hero-section {
+background: url('../images/amt3.png') no-repeat center center/cover;
+height: 400px;
+display: flex;
+align-items: center;
+justify-content: center;
+text-align: center;
+}
+.hero-content {
+background: rgba(0, 0, 0, 0.5);
+padding: 20px;
+border-radius: 10px;
+color: white;
+}
+.hero-content h1 {
+font-size: var(--font-size-large);
+font-weight: bold;
+}
+
+
+/* ==================== */
+/* Text Utilities       */
+/* ==================== */
+.text-primary {
+color: var(--text-primary) !important;
+}
+
+.text-secondary {
+color: var(--text-secondary);
+}
+
+a:not(.btn) {
+color: var(--text-primary) !important;
+text-decoration:none;
+
+}
+/* Breadcrumbs          */
+.breadcrumbs-wrapper {
+background-color: #f8f9fa;
+padding: 10px;
+border-radius: 5px;
+}
+
+.breadcrumbs-list {
+list-style: none;
+padding: 0;
+display: flex;
+flex-wrap: wrap;
+}
+
+.breadcrumbs-list li {
+margin-right: 10px;
+}
+
+.breadcrumbs-list li::after {
+content: ">";
+margin-left: 10px;
+color: #6c757d;
+}
+
+.breadcrumbs-list li:last-child::after {
+content: "";
+}
+
+/* Call to Action       */
+
+.ribbon {
+background: var(--primary-color);
+color: #fff;
+padding: 20px;
+text-align: center;
+margin-top: 30px;
+border-radius: 5px;
+}
+
+.ribbon a {
+color: #fff;
+font-weight: bold;
+}
+
+.counter {
+font-size: 2.5rem;
+font-weight: bold;
+color: #fff;
+margin: 10px 0;
+}
+.counter-item span {
+display: block;
+font-size: 1rem;
+}

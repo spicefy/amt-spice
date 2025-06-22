@@ -2,7 +2,7 @@
 /**
  * AMT-Spice Theme Functions
  * 
- * @package AMT-Spice
+ * @package amt-spice
  * @version 1.0.0
  */
 
@@ -11,11 +11,11 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Define theme version
+// Define theme version constant
 define('AMT_SPICE_VERSION', '1.0.0');
 
 /**
- * Register widget areas
+ * Register widget areas (sidebars)
  */
 function amt_spice_widgets_init() {
     register_sidebar(array(
@@ -31,10 +31,9 @@ function amt_spice_widgets_init() {
 add_action('widgets_init', 'amt_spice_widgets_init');
 
 /**
- * Custom Search Widget
+ * Custom Search Widget with Bootstrap styling
  */
 class Custom_Search_Widget extends WP_Widget {
-
     public function __construct() {
         parent::__construct(
             'custom_search_widget',
@@ -63,7 +62,7 @@ class Custom_Search_Widget extends WP_Widget {
     }
 
     public function update($new_instance, $old_instance) {
-        return [];
+        return array();
     }
 }
 
@@ -76,10 +75,9 @@ function register_custom_search_widget() {
 add_action('widgets_init', 'register_custom_search_widget');
 
 /**
- * Custom Popular Posts Widget
+ * Popular Posts Widget with Bootstrap styling
  */
 class Custom_Popular_Posts_Widget extends WP_Widget {
-
     public function __construct() {
         parent::__construct(
             'custom_popular_posts_widget',
@@ -89,12 +87,12 @@ class Custom_Popular_Posts_Widget extends WP_Widget {
     }
 
     public function widget($args, $instance) {
-        $title  = apply_filters('widget_title', $instance['title']);
+        $title  = apply_filters('widget_title', $instance['title'] ?? '');
         $number = !empty($instance['number']) ? absint($instance['number']) : 3;
 
         echo $args['before_widget'];
         ?>
-        <span class="position-absolute top-0 start-0 w-100 h-100 .bg-gradient-secondary opacity-10 rounded-3"></span>
+        <span class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-secondary opacity-10 rounded-3"></span>
         <div class="position-relative zindex-2">
             <?php if (!empty($title)) : ?>
                 <h3 class="h5"><?php echo esc_html($title); ?></h3>
@@ -111,8 +109,8 @@ class Custom_Popular_Posts_Widget extends WP_Widget {
                 if ($popular_posts->have_posts()) :
                     while ($popular_posts->have_posts()) : $popular_posts->the_post();
                         $post_id = get_the_ID();
-                        $likes = get_post_meta($post_id, 'post_likes', true);
-                        $shares = get_post_meta($post_id, 'post_shares', true);
+                        $likes   = get_post_meta($post_id, 'post_likes', true);
+                        $shares  = get_post_meta($post_id, 'post_shares', true);
                         ?>
                         <li class="border-bottom pb-3 mb-3">
                             <h4 class="h6 mb-2">
@@ -180,10 +178,10 @@ class Custom_Popular_Posts_Widget extends WP_Widget {
     }
 
     public function update($new_instance, $old_instance) {
-        return [
+        return array(
             'title'  => sanitize_text_field($new_instance['title']),
             'number' => absint($new_instance['number']),
-        ];
+        );
     }
 }
 
@@ -196,10 +194,9 @@ function register_custom_popular_posts_widget() {
 add_action('widgets_init', 'register_custom_popular_posts_widget');
 
 /**
- * Custom Categories List Widget
+ * Categories List Widget with Bootstrap styling
  */
 class Custom_Categories_List_Widget extends WP_Widget {
-
     public function __construct() {
         parent::__construct(
             'custom_categories_list_widget',
@@ -209,14 +206,12 @@ class Custom_Categories_List_Widget extends WP_Widget {
     }
 
     public function widget($args, $instance) {
-        $title = apply_filters('widget_title', $instance['title']);
+        $title = apply_filters('widget_title', $instance['title'] ?? '');
 
         echo $args['before_widget'];
-        ?>
-        <?php if (!empty($title)) : ?>
+        if (!empty($title)) : ?>
             <h3 class="h5"><?php echo esc_html($title); ?></h3>
         <?php endif; ?>
-
         <ul class="nav flex-column fs-sm">
             <li class="nav-item mb-1">
                 <a href="<?php echo esc_url(get_permalink(get_option('page_for_posts'))); ?>" class="nav-link py-1 px-0 active">
@@ -229,8 +224,8 @@ class Custom_Categories_List_Widget extends WP_Widget {
                 'order'   => 'ASC',
             ));
             foreach ($categories as $category) {
-                $cat_link = get_category_link($category->term_id);
-                $cat_name = esc_html($category->name);
+                $cat_link  = get_category_link($category->term_id);
+                $cat_name  = esc_html($category->name);
                 $cat_count = $category->count;
                 ?>
                 <li class="nav-item mb-1">
@@ -285,7 +280,7 @@ function amt_spice_comments_display($comment, $args, $depth) {
     <div class="py-4">
         <div class="d-flex align-items-center justify-content-between pb-2 mb-1">
             <div class="d-flex align-items-center me-3">
-                <?php echo get_avatar($comment, 48, '', '', ['class' => 'rounded-circle']); ?>
+                <?php echo get_avatar($comment, 48, '', '', array('class' => 'rounded-circle')); ?>
                 <div class="ps-3">
                     <h6 class="fw-semibold mb-0"><?php echo get_comment_author(); ?></h6>
                     <span class="fs-sm text-muted">
@@ -293,7 +288,7 @@ function amt_spice_comments_display($comment, $args, $depth) {
                     </span>
                 </div>
             </div>
-            <a href="<?php echo esc_url(get_comment_reply_link(array_merge($args, ['depth' => $depth, 'max_depth' => $args['max_depth']]))); ?>" class="nav-link fs-sm px-0">
+            <a href="<?php echo esc_url(get_comment_reply_link(array_merge($args, array('depth' => $depth, 'max_depth' => $args['max_depth'])))); ?>" class="nav-link fs-sm px-0">
                 <i class="bx bx-share fs-lg me-2"></i>
                 <?php _e('Reply', 'amt-spice'); ?>
             </a>
@@ -304,7 +299,7 @@ function amt_spice_comments_display($comment, $args, $depth) {
 }
 
 /**
- * Calculate estimated reading time for a post
+ * Calculate estimated reading time for a post (assuming 200 words/min)
  */
 function amt_spice_estimated_reading_time() {
     $content = get_post_field('post_content', get_the_ID());
@@ -313,15 +308,10 @@ function amt_spice_estimated_reading_time() {
     return sprintf(_n('%d min', '%d mins', $minutes, 'amt-spice'), $minutes);
 }
 
-// updated to here====================================
-
-
-
 /**
  * Custom breadcrumbs function
  */
 function custom_breadcrumbs() {
-    // Settings
     $separator = '<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1 mx-1"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>';
     $home_title = 'Home';
 
@@ -330,38 +320,29 @@ function custom_breadcrumbs() {
     }
 
     echo '
-    <style>.breadcrumb-item + .breadcrumb-item::before {
-    display: none;
-}</style>
+    <style>.breadcrumb-item + .breadcrumb-item::before { display: none; }</style>
     <nav class="container py-1 mb-lg-2 mt-lg-3" aria-label="breadcrumb"><ol class="breadcrumb mb-0">';
 
     // Home link
     echo '<li class="breadcrumb-item"><a href="' . home_url() . '">
         <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1 me-1"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg> ' . $home_title . '</a></li>';
 
-    // Category or Single Post
     if (is_category() || is_single()) {
         $categories = get_the_category();
         if ($categories && !is_page()) {
             foreach ($categories as $category) {
-                echo '<li class="breadcrumb-item"><a href="' . get_category_link($category->term_id) . '">'. $separator  . esc_html($category->name) . '</a></li>';
+                echo '<li class="breadcrumb-item"><a href="' . get_category_link($category->term_id) . '">' . $separator . esc_html($category->name) . '</a></li>';
             }
         }
         if (is_single()) {
             echo '<li class="breadcrumb-item">' . $separator . get_the_title() . '</li>';
         }
-    }
-
-    // Tag Page
-    elseif (is_tag()) {
+    } elseif (is_tag()) {
         echo '<li class="breadcrumb-item active">' . $separator . single_tag_title('', false) . '</li>';
-    }
-
-    // Page
-    elseif (is_page()) {
-        $parent_id  = wp_get_post_parent_id(get_the_ID());
+    } elseif (is_page()) {
+        $parent_id = wp_get_post_parent_id(get_the_ID());
         if ($parent_id) {
-            $breadcrumbs = [];
+            $breadcrumbs = array();
             while ($parent_id) {
                 $page = get_post($parent_id);
                 $breadcrumbs[] = '<li class="breadcrumb-item"><a href="' . get_permalink($page->ID) . '">' . get_the_title($page->ID) . '</a></li>';
@@ -370,12 +351,8 @@ function custom_breadcrumbs() {
             $breadcrumbs = array_reverse($breadcrumbs);
             echo implode('', $breadcrumbs);
         }
-        // Add current page
         echo '<li class="breadcrumb-item">' . $separator . get_the_title() . '</li>';
-    }
-
-    // Custom Post Type Archives, Author, 404, Search (optional)
-    elseif (is_search()) {
+    } elseif (is_search()) {
         echo '<li class="breadcrumb-item">' . $separator . 'Search results for: "' . get_search_query() . '"</li>';
     } elseif (is_author()) {
         echo '<li class="breadcrumb-item">' . $separator . 'Articles by ' . get_the_author() . '</li>';
@@ -391,21 +368,47 @@ function custom_breadcrumbs() {
  */
 function amt_spice_setup() {
     load_theme_textdomain('amt-spice', get_template_directory() . '/languages');
+
     add_theme_support('automatic-feed-links');
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
     add_theme_support('html5', array('search-form', 'comment-form', 'comment-list', 'gallery', 'caption'));
     add_theme_support('customize-selective-refresh-widgets');
     add_theme_support('custom-logo');
-    
-    // Register all menus
+    add_theme_support('wp-block-styles');
+    add_theme_support('responsive-embeds');
+    add_theme_support('align-wide');
+    add_theme_support('custom-background', array(
+        'default-color' => 'ffffff',
+        'default-image' => '',
+    ));
+
     register_nav_menus(array(
-        'primary' => __('Primary Menu', 'amt-spice'),
-        'footer-1' => __('Footer Column 1', 'amt-spice'),
-        'footer-2' => __('Footer Column 2', 'amt-spice'),
-        'footer-3' => __('Footer Column 3', 'amt-spice'),
+        'primary'      => __('Primary Menu', 'amt-spice'),
+        'footer-1'     => __('Footer Column 1', 'amt-spice'),
+        'footer-2'     => __('Footer Column 2', 'amt-spice'),
+        'footer-3'     => __('Footer Column 3', 'amt-spice'),
         'sidebar-menu' => __('Sidebar Menu', 'amt-spice')
     ));
+
+    // Register a block style for the paragraph block
+    register_block_style(
+        'core/paragraph',
+        array(
+            'name'  => 'fancy-paragraph',
+            'label' => __('Fancy Paragraph', 'amt-spice'),
+        )
+    );
+
+    // Register a custom block pattern
+    register_block_pattern(
+        'amt-spice/my-pattern',
+        array(
+            'title'       => __('My Pattern', 'amt-spice'),
+            'description' => _x('A custom block pattern', 'Block pattern description', 'amt-spice'),
+            'content'     => "<!-- wp:paragraph --><p>Pattern Content</p><!-- /wp:paragraph -->",
+        )
+    );
 }
 add_action('after_setup_theme', 'amt_spice_setup');
 
@@ -413,25 +416,25 @@ add_action('after_setup_theme', 'amt_spice_setup');
  * Enqueue scripts and styles
  */
 function amt_spice_scripts() {
-    // Font Awesome
-    wp_enqueue_style('font-awesome', 
+    // Font Awesome CDN
+    wp_enqueue_style('font-awesome',
         'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
         array(),
         '6.5.1'
     );
-    
+
     // Theme styles
-    wp_enqueue_style('amt-spice-timeline', 
+    wp_enqueue_style('amt-spice-timeline',
         get_template_directory_uri() . '/assets/css/timeline.css',
         array(),
         AMT_SPICE_VERSION
     );
-    wp_enqueue_style('amt-spice-swiperbundle', 
+    wp_enqueue_style('amt-spice-swiperbundle',
         get_template_directory_uri() . '/assets/css/swiper-bundle.min.css',
         array(),
         AMT_SPICE_VERSION
     );
-    wp_enqueue_style('amt-spice-thememin', 
+    wp_enqueue_style('amt-spice-thememin',
         get_template_directory_uri() . '/assets/css/theme.min.css',
         array(),
         AMT_SPICE_VERSION
@@ -440,11 +443,10 @@ function amt_spice_scripts() {
     wp_enqueue_script(
         'timeline-repeater-control',
         get_template_directory_uri() . '/assets/js/timeline-repeater-control.js',
-        array('jquery', 'jquery-ui-sortable', 'customize-controls', "wp-util"),
+        array('jquery', 'jquery-ui-sortable', 'customize-controls', 'wp-util'),
         '1.0.0',
         true
     );
-    
     wp_enqueue_style(
         'timeline-repeater-control',
         get_template_directory_uri() . '/assets/css/timeline-repeater-control.css',
@@ -452,59 +454,74 @@ function amt_spice_scripts() {
         '1.0.0'
     );
     wp_enqueue_style('amt-spice-style', get_stylesheet_uri());
-    wp_enqueue_style('amt-spice-custom', 
-        get_template_directory_uri() . '/assets/css/styles.css?'.rand(),
+    wp_enqueue_style('amt-spice-custom',
+        get_template_directory_uri() . '/assets/css/styles.css?' . rand(),
         array(),
         AMT_SPICE_VERSION
     );
-    wp_enqueue_style('amt-spice-minbox', 
+    wp_enqueue_style('amt-spice-minbox',
         get_template_directory_uri() . '/assets/css/minbox.css',
         array(),
         AMT_SPICE_VERSION
     );
-    
-    wp_enqueue_script('amt-spice-swiperinjs', 
+    wp_enqueue_style('jobs-listing-section',
+        get_template_directory_uri() . '/assets/css/jobs-listing-section.css',
+        array(),
+        '1.0'
+    );
+
+    // Swiper JS and initializers
+    wp_enqueue_script('amt-spice-swiperinjs',
         get_template_directory_uri() . '/assets/js/swiper-bundle.min.js',
         array(),
         AMT_SPICE_VERSION
     );
-    wp_enqueue_script('amt-spice-swiperinitjs', 
+    wp_enqueue_script('amt-spice-swiperinitjs',
         get_template_directory_uri() . '/assets/js/swiper-init.js',
         array(),
         AMT_SPICE_VERSION
     );
-
-    wp_enqueue_script('amt-spice-thememinjs', 
+    wp_enqueue_script('amt-spice-thememinjs',
         get_template_directory_uri() . '/assets/js/theme.min.js',
         array(),
         AMT_SPICE_VERSION
     );
-    
-    // Chart.js
-    wp_enqueue_script('chart-js', 
+
+    // Chart.js CDN
+    wp_enqueue_script('chart-js',
         'https://cdn.jsdelivr.net/npm/chart.js',
         array(),
         '4.4.0',
         true
     );
-    
+
     // Counter JS
-    wp_enqueue_script('counter-js', 
+    wp_enqueue_script('counter-js',
         get_template_directory_uri() . '/assets/js/counter.js',
         array(),
         AMT_SPICE_VERSION,
         true
     );
-    
+
     // Customizer preview JS
     if (is_customize_preview()) {
-        wp_enqueue_script('amt-spice-customizer-preview', 
+        wp_enqueue_script('amt-spice-customizer-preview',
             get_template_directory_uri() . '/assets/js/customizer-preview.js',
             array('jquery', 'customize-preview'),
             AMT_SPICE_VERSION,
             true
         );
     }
+
+    // Enqueue comment-reply script if needed
+    if (is_singular() && comments_open() && get_option('thread_comments')) {
+        wp_enqueue_script('comment-reply');
+    }
+
+    // Enqueue Google Fonts based on theme mod
+    $font = get_theme_mod('body_font', 'Roboto');
+    $font_slug = str_replace(' ', '+', $font);
+    wp_enqueue_style('google-fonts', "https://fonts.googleapis.com/css2?family={$font_slug}:wght@400;700&display=swap", false);
 }
 add_action('wp_enqueue_scripts', 'amt_spice_scripts');
 
@@ -578,17 +595,21 @@ function gamba_testimonial_meta_box_callback($post) {
  * Save testimonial meta data
  */
 function gamba_save_testimonial_meta($post_id) {
+    // Verify nonce
     if (!isset($_POST['gamba_testimonial_nonce']) ||
          !wp_verify_nonce($_POST['gamba_testimonial_nonce'], 'gamba_save_testimonial_meta')) {
         return;
     }
 
+    // Prevent autosave from overwriting
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
 
+    // Save Customer Name
     if (isset($_POST['testimonial_name'])) {
         update_post_meta($post_id, '_testimonial_name', sanitize_text_field($_POST['testimonial_name']));
     }
 
+    // Save Designation
     if (isset($_POST['testimonial_designation'])) {
         update_post_meta($post_id, '_testimonial_designation', sanitize_text_field($_POST['testimonial_designation']));
     }
@@ -602,8 +623,9 @@ if (!class_exists('WP_Bootstrap_Navwalker')) {
 require_once get_template_directory() . '/inc/customizer.php'; // Customizer settings
 require_once get_template_directory() . '/inc/template-tags.php';
 require_once get_template_directory() . '/inc/template-functions.php';
-// Include the breadcrumbs function from template-parts
 require_once get_template_directory() . '/template-parts/breadcrumbs.php';
+require_once get_template_directory() . '/inc/team-settings.php';
+require_once get_template_directory() . '/inc/job-listing-settings.php';
 
 /**
  * Add custom classes to sidebar menu links
@@ -619,7 +641,7 @@ function add_menu_link_classes($atts, $item, $args) {
 add_filter('nav_menu_link_attributes', 'add_menu_link_classes', 10, 3);
 
 /**
- * JSON Sanitization callback
+ * JSON Sanitization callback for Customizer
  */
 function amt_sanitize_json($input) {
     $decoded = json_decode($input, true);
@@ -630,7 +652,7 @@ function amt_sanitize_json($input) {
 }
 
 /**
- * Customizer preview JS
+ * Enqueue Customizer preview JS
  */
 function amt_spice_customize_preview_js() {
     wp_enqueue_script('amt_spice-customizer', get_stylesheet_directory_uri() . '/customizer.js', ['customize-preview'], null, true);
@@ -638,7 +660,7 @@ function amt_spice_customize_preview_js() {
 add_action('customize_preview_init', 'amt_spice_customize_preview_js');
 
 /**
- * Generate dynamic styles based on theme mods
+ * Generate dynamic styles based on theme modifications
  */
 function amt_spice_dynamic_styles() {
     $primary = get_theme_mod('primary_color', '#009bbe');
@@ -650,7 +672,6 @@ function amt_spice_dynamic_styles() {
     $body_font = get_theme_mod('body_font', "'Arial', sans-serif");
     $paddingforfixed = "";
     $navbar_position = get_theme_mod('navbar_position', 'normal');
-
     $nav_font_size = get_theme_mod('nav_font_size', '16px');
     $font_weight = get_theme_mod('nav_font_weight', '400');
 
@@ -690,17 +711,7 @@ function amt_spice_dynamic_styles() {
 add_action('wp_head', 'amt_spice_dynamic_styles');
 
 /**
- * Enqueue Google Fonts
- */
-function amt_spice_google_fonts() {
-    $font = get_theme_mod('body_font', 'Roboto');
-    $font_slug = str_replace(' ', '+', $font);
-    wp_enqueue_style('google-fonts', "https://fonts.googleapis.com/css2?family={$font_slug}:wght@400;700&display=swap", false);
-}
-add_action('wp_enqueue_scripts', 'amt_spice_google_fonts');
-
-/**
- * Sanitize repeater field input
+ * Sanitize repeater field input for Customizer
  */
 function amt_sanitize_repeater($input) {
     $input_decoded = json_decode($input, true);
@@ -711,13 +722,10 @@ function amt_sanitize_repeater($input) {
 }
 
 /**
- * Add default timeline CSS
+ * Add default timeline CSS if not present in Additional CSS
  */
 function add_default_timeline_css() {
-    // Check if custom CSS already exists
     $custom_css = wp_get_custom_css();
-    
-    // Only add if it doesn't already exist
     if (strpos($custom_css, '.timeline') === false) {
         $css = "
             /* Timeline Styles */
@@ -727,7 +735,6 @@ function add_default_timeline_css() {
                 margin: 0 auto;
                 padding: 40px 0;
             }
-
             .timeline::after {
                 content: '';
                 position: absolute;
@@ -739,14 +746,12 @@ function add_default_timeline_css() {
                 margin-left: -3px;
                 border-radius: 3px;
             }
-
             .timeline-item {
                 padding: 10px 40px;
                 position: relative;
                 width: 50%;
                 box-sizing: border-box;
             }
-
             .timeline-item::after {
                 content: '';
                 position: absolute;
@@ -758,78 +763,33 @@ function add_default_timeline_css() {
                 top: 15px;
                 z-index: 1;
             }
-
-            .timeline-item-left {
-                left: 0;
-            }
-
-            .timeline-item-right {
-                left: 50%;
-            }
-
-            .timeline-item-left::after {
-                right: -12px;
-            }
-
-            .timeline-item-right::after {
-                left: -12px;
-            }
-
+            .timeline-item-left { left: 0; }
+            .timeline-item-right { left: 50%; }
+            .timeline-item-left::after { right: -12px; }
+            .timeline-item-right::after { left: -12px; }
             .timeline-content {
                 padding: 20px;
                 background-color: white;
                 border-radius: 8px;
                 box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             }
-
             .timeline-date {
                 font-weight: bold;
                 color: #0d6efd;
                 margin-bottom: 10px;
             }
-
-            .timeline-month {
-                display: block;
-                font-size: 1.2rem;
-            }
-
-            .timeline-year {
-                display: block;
-                font-size: 1.5rem;
-            }
-
-            .timeline-event {
-                font-size: 1rem;
-                line-height: 1.5;
-            }
-
+            .timeline-month { display: block; font-size: 1.2rem; }
+            .timeline-year { display: block; font-size: 1.5rem; }
+            .timeline-event { font-size: 1rem; line-height: 1.5; }
             /* Responsive adjustments */
             @media (max-width: 768px) {
-                .timeline::after {
-                    left: 31px;
-                }
-                
-                .timeline-item {
-                    width: 100%;
-                    padding-left: 70px;
-                    padding-right: 25px;
-                }
-                
-                .timeline-item::after {
-                    left: 18px;
-                }
-                
-                .timeline-item-left, .timeline-item-right {
-                    left: 0;
-                }
-                
-                .timeline-item-left::after, .timeline-item-right::after {
-                    left: 18px;
-                }
+                .timeline::after { left: 31px; }
+                .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
+                .timeline-item::after { left: 18px; }
+                .timeline-item-left, .timeline-item-right { left: 0; }
+                .timeline-item-left::after, .timeline-item-right::after { left: 18px; }
             }
         ";
-        
-        // Append the CSS
         wp_update_custom_css_post($custom_css . $css);
     }
 }
@@ -845,12 +805,12 @@ if (class_exists('WP_Customize_Control')) {
         
         public function __construct($manager, $id, $args = array()) {
             parent::__construct($manager, $id, $args);
-            
             if (isset($args['fields'])) {
                 $this->fields = $args['fields'];
             }
         }
-        
+
+        // Render the control content
         public function render_content() {
             ?>
             <label>
@@ -861,7 +821,6 @@ if (class_exists('WP_Customize_Control')) {
                     <span class="description customize-control-description"><?php echo esc_html($this->description); ?></span>
                 <?php endif; ?>
             </label>
-            
             <div class="timeline-repeater" data-id="<?php echo esc_attr($this->id); ?>">
                 <div class="timeline-repeater-items">
                     <?php
@@ -873,21 +832,20 @@ if (class_exists('WP_Customize_Control')) {
                     }
                     ?>
                 </div>
-                
-                <button type="button" class="button timeline-repeater-add"><?php esc_html_e('Add Timeline Item', 'your-theme'); ?></button>
+                <button type="button" class="button timeline-repeater-add"><?php esc_html_e('Add Timeline Item', 'amt-spice'); ?></button>
                 <input type="hidden" class="timeline-repeater-data" <?php $this->link(); ?>>
             </div>
             <?php
         }
-        
+
+        // Render each timeline repeater item
         protected function render_item($index, $item = array()) {
             ?>
             <div class="timeline-repeater-item" data-index="<?php echo esc_attr($index); ?>">
                 <div class="timeline-repeater-item-header">
-                    <span class="timeline-repeater-item-title"><?php printf(esc_html__('Item #%d', 'your-theme'), $index + 1); ?></span>
-                    <button type="button" class="button timeline-repeater-item-remove"><?php esc_html_e('Remove', 'your-theme'); ?></button>
+                    <span class="timeline-repeater-item-title"><?php printf(esc_html__('Item #%d', 'amt-spice'), $index + 1); ?></span>
+                    <button type="button" class="button timeline-repeater-item-remove"><?php esc_html_e('Remove', 'amt-spice'); ?></button>
                 </div>
-                
                 <div class="timeline-repeater-item-fields">
                     <?php foreach ($this->fields as $field_name => $field) : ?>
                         <div class="timeline-repeater-field">
@@ -895,7 +853,6 @@ if (class_exists('WP_Customize_Control')) {
                                 <?php if (!empty($field['label'])) : ?>
                                     <span class="timeline-repeater-field-label"><?php echo esc_html($field['label']); ?></span>
                                 <?php endif; ?>
-                                
                                 <?php if ($field['type'] === 'text') : ?>
                                     <input type="text" 
                                            class="timeline-repeater-field-control" 
@@ -916,47 +873,33 @@ if (class_exists('WP_Customize_Control')) {
 }
 
 /**
- * Sanitize timeline repeater input
+ * Sanitize timeline repeater input for Customizer
  */
 function timeline_sanitize_repeater($input) {
     $input_decoded = json_decode($input, true);
-    
     if (!is_array($input_decoded)) {
         return '';
     }
-    
     $output = array();
-    
     foreach ($input_decoded as $item) {
         $sanitized_item = array();
-        
         if (isset($item['year'])) {
             $sanitized_item['year'] = sanitize_text_field($item['year']);
         }
-        
         if (isset($item['month'])) {
             $sanitized_item['month'] = sanitize_text_field($item['month']);
         }
-        
         if (isset($item['event'])) {
             $sanitized_item['event'] = sanitize_text_field($item['event']);
         }
-        
         $output[] = $sanitized_item;
     }
-    
     return json_encode($output);
 }
-//Team settings
-require get_template_directory() . '/inc/team-settings.php';
 
-
-// Load job listing settings===============START==========
-
-// Load job listing settings
-require get_template_directory() . '/inc/job-listing-settings.php';
-
-// Register shortcode for the jobs listing section
+/**
+ * Register shortcode for the jobs listing section
+ */
 function amt_spice_jobs_listing_section_shortcode() {
     ob_start();
     get_template_part('template-parts/jobs-listing-section');
@@ -964,49 +907,11 @@ function amt_spice_jobs_listing_section_shortcode() {
 }
 add_shortcode('jobs_listing_section', 'amt_spice_jobs_listing_section_shortcode');
 
-// Enqueue styles for job listing section
-function amt_spice_enqueue_jobs_listing_styles() {
-    wp_enqueue_style('jobs-listing-section', get_template_directory_uri() . '/assets/css/jobs-listing-section.css', array(), '1.0');
-   
+/**
+ * Add editor styles
+ */
+function amt_spice_add_editor_styles() {
+    add_editor_style('editor-style.css');
+    add_editor_style(get_template_directory_uri() . '/assets/css/editor.css');
 }
-add_action('wp_enqueue_scripts', 'amt_spice_enqueue_jobs_listing_styles');
-// Load job listing settings===============END============
-
-//wordpress recomdandations
-//====1.  register_block_style=============
-register_block_style(
-    'core/paragraph',
-    array(
-        'name'  => 'fancy-paragraph',
-        'label' => __( 'Fancy Paragraph', 'your-theme-textdomain' ),
-    )
-);
-//===2. register_block_pattern===========
-// Register a custom block pattern
-register_block_pattern(
-    'your-theme/my-pattern',
-    array(
-        'title'       => __( 'My Pattern', 'your-theme-textdomain' ),
-        'description' => _x( 'A custom block pattern', 'Block pattern description', 'your-theme-textdomain' ),
-        'content'     => "<!-- wp:paragraph --><p>Pattern Content</p><!-- /wp:paragraph -->",
-    )
-);
-//==3. add_theme_support=============
-add_theme_support( 'wp-block-styles' );
-//==4. responsive embedes=============
-// Enable responsive embeds support
-add_theme_support( 'responsive-embeds' );
-//=5. add_theme_support( "custom-background", $args )
-add_theme_support( 'custom-background', array(
-    'default-color' => 'ffffff',
-    'default-image' => '',
-));
-//6.==add_theme_support( "align-wide" )
-add_theme_support( 'align-wide' );
-//Add editor styles so the block editor matches your theme
-add_editor_style( 'editor-style.css' );
-//Comment-reply script
-if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
-    wp_enqueue_script( 'comment-reply' );
-}
-//
+add_action('admin_init', 'amt_spice_add_editor_styles');

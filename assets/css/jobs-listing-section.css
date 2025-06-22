@@ -1,0 +1,23 @@
+.job-card {
+    transition: all 0.3s ease;
+}
+.job-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.company-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    padding: 5px;
+    border: 1px solid #eee;
+    background: white;
+}
+.filter-section {
+    background-color: #f8f9fa;
+}
+
+/* Status-specific styling */
+.border-success { border-left-color: var(--bs-success) !important; }
+.border-warning { border-left-color: var(--bs-warning) !important; }
+.border-secondary { border-left-color: var(--bs-secondary) !important; }

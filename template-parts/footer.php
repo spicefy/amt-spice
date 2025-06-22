@@ -1,3 +1,4 @@
+</main>
 <footer class="bg-dark text-white p-5">
     <div class="container text-center">
         <div class="row text-start">
@@ -18,24 +19,25 @@
                 'footer1' => [
                     'title' => 'Get Involved', 
                     'col_class' => 'col-md-2',
-                    'theme_location' => 'footer1'
+                    'theme_location' => 'footer-1'
                 ],
                 'footer2' => [
                     'title' => 'Resources', 
                     'col_class' => 'col-md-2',
-                    'theme_location' => 'footer2'
+                    'theme_location' => 'footer-2'
                 ],
                 'footer3' => [
                     'title' => 'About This Site', 
                     'col_class' => 'col-md-3',
-                    'theme_location' => 'footer3'
+                    'theme_location' => 'footer-3'
                 ]
             ];
             
             foreach ($footer_columns as $key => $settings) : 
+               
                 if (has_nav_menu($settings['theme_location'])) : ?>
                     <div class="<?php echo esc_attr($settings['col_class']); ?>">
-                        <h5 class="footer-column-title"><?php echo esc_html(get_theme_mod('amt_' . $key . '_title', $settings['title'])); ?></h5>
+                        <h5 class="footer-column-title text-white"><?php echo esc_html(get_theme_mod('amt_' . $key . '_title', $settings['title'])); ?></h5>
                         <?php
                         wp_nav_menu([
                             'theme_location' => $settings['theme_location'],
@@ -78,32 +80,34 @@
 
         <!-- Footer Links -->
         <div class="footer-legal-links text-center">
-            <?php
-            $legal_links = [
-                'privacy' => ['default' => 'Privacy Notice'],
-                'terms' => ['default' => 'Terms of Use'],
-                'contact' => ['default' => 'Contact Us']
-            ];
-            
-            $links_output = [];
-            foreach ($legal_links as $key => $data) {
-                $url = get_theme_mod('amt_' . $key . '_link');
-                $text = get_theme_mod('amt_' . $key . '_text', $data['default']);
-                
-                if ($url) {
-                    $is_current = (false !== strpos($_SERVER['REQUEST_URI'], parse_url($url, PHP_URL_PATH)));
-                    $links_output[] = sprintf(
-                        '<a href="%s" class="footer-legal-link %s">%s</a>',
-                        esc_url($url),
-                        $is_current ? 'current' : '',
-                        esc_html($text)
-                    );
-                }
-            }
-            
-            echo implode('<span class="link-separator"> | </span>', $links_output);
-            ?>
-        </div>
+    <?php
+    $legal_links = [
+        'privacy' => ['default' => 'Privacy Notice'],
+        'terms' => ['default' => 'Terms of Use'],
+        'contact' => ['default' => 'Contact Us']
+    ];
+
+    $links_output = [];
+    foreach ($legal_links as $key => $data) {
+        $url = get_theme_mod('amt_' . $key . '_link');
+        $text = get_theme_mod('amt_' . $key . '_text', $data['default']);
+
+        if ($url) {
+            $path = parse_url($url, PHP_URL_PATH);
+            $is_current = (!empty($path) && strpos($_SERVER['REQUEST_URI'], $path) !== false);
+
+            $links_output[] = sprintf(
+                '<a href="%s" class="footer-legal-link text-decoration-none %s">%s</a>',
+                esc_url($url),
+                $is_current ? 'current' : '',
+                esc_html($text)
+            );
+        }
+    }
+
+    echo implode('<span class="link-separator"> | </span>', $links_output);
+    ?>
+</div>
 
         <!-- Copyright -->
         <p class="footer-copyright text-center mt-3">
@@ -127,7 +131,7 @@ class Footer_Menu_Walker extends Walker_Nav_Menu {
         $attributes .= !empty($item->url) ? ' href="' . esc_attr($item->url) . '"' : '';
         
         $item_output = $args->before;
-        $item_output .= '<a class="footer-menu-link"' . $attributes . '>';
+        $item_output .= '<a class="footer-menu-link text-decoration-none "' . $attributes . '>';
         $item_output .= $args->link_before . apply_filters('the_title', $item->title, $item->ID) . $args->link_after;
         $item_output .= '</a>';
         $item_output .= $args->after;
